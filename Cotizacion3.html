@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cotización - Porkyburritos</title>
+<style>
+  :root{
+    --navy:#152a52;
+    --navy-dark:#0f1f3d;
+    --red:#c81d25;
+    --light-gray:#eeeeee;
+    --box-blue:#dbe6f3;
+    --box-blue-border:#9db6d9;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#ccc;
+    margin:0;
+    padding:30px 0;
+    display:flex;
+    justify-content:center;
+  }
+  .hint{
+    max-width:900px;
+    margin:0 auto 14px auto;
+    background:#fff8d6;
+    border:1px solid #e0c94a;
+    padding:10px 16px;
+    border-radius:6px;
+    font-size:13px;
+    color:#5a4a00;
+  }
+  .wrapper{
+    max-width:900px;
+    margin:0 auto;
+  }
+  .sheet{
+    background:#fff;
+    width:900px;
+    max-width:100%;
+    box-shadow:0 0 12px rgba(0,0,0,0.3);
+  }
+  /* HEADER */
+  .header{
+    background:var(--navy);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:22px 30px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:28px;
+    font-weight:800;
+    letter-spacing:1px;
+  }
+  .logo .emoji{font-size:34px;}
+  .cot-title{
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:1px;
+  }
+  .redline{
+    height:6px;
+    background:var(--red);
+  }
+  /* BODY */
+  .content{
+    padding:26px 34px 10px 34px;
+  }
+  .cot-number{
+    color:var(--navy);
+    font-size:26px;
+    font-weight:800;
+    margin-bottom:18px;
+  }
+  .info-grid{
+    display:flex;
+    justify-content:space-between;
+    gap:30px;
+    margin-bottom:14px;
+  }
+  .info-col{flex:1;}
+  .info-col p{
+    margin:4px 0;
+    font-size:15px;
+    color:#111;
+  }
+  .info-col .label{
+    color:var(--navy);
+    font-weight:800;
+    font-size:17px;
+  }
+  .divider{
+    border:none;
+    border-top:1.5px solid var(--red);
+    margin:14px 0 16px 0;
+  }
+  .section-title{
+    color:var(--navy);
+    font-weight:800;
+    font-size:18px;
+    text-decoration:underline;
+    margin:14px 0 6px 0;
+  }
+  .desc-text{
+    font-size:13.5px;
+    color:#222;
+    margin:0 0 10px 0;
+    line-height:1.4;
+  }
+  /* TABLE */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:6px;
+  }
+  thead td, thead th{
+    background:var(--navy);
+    color:#fff;
+    font-weight:800;
+    padding:10px 12px;
+    font-size:14px;
+    text-align:center;
+  }
+  thead td:nth-child(2), thead th:nth-child(2){
+    text-align:left;
+  }
+  tbody td{
+    padding:9px 12px;
+    font-size:14px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+  }
+  tbody td:nth-child(2){
+    text-align:left;
+    font-weight:700;
+    color:#111;
+  }
+  tbody tr:nth-child(odd){
+    background:var(--light-gray);
+  }
+  tbody tr:nth-child(even){
+    background:#fff;
+  }
+  .totals-row td{
+    font-weight:800;
+  }
+  .totals-box{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:0;
+  }
+  .totals-table{
+    width:60%;
+    margin-left:auto;
+    border-collapse:collapse;
+  }
+  .totals-table td{
+    padding:6px 12px;
+    font-size:15px;
+    text-align:right;
+    border:none;
+  }
+  .totals-table .label-cell{
+    color:var(--navy);
+    font-weight:800;
+    text-align:left;
+  }
+  .total-general .label-cell{
+    color:var(--red);
+    font-weight:800;
+  }
+  .total-general .value-cell{
+    color:var(--red);
+    font-weight:800;
+    font-size:18px;
+  }
+  /* NOTES BOX */
+  .notes-wrap{
+    display:flex;
+    justify-content:flex-end;
+    margin:18px 0 24px 0;
+  }
+  .notes-box{
+    background:var(--box-blue);
+    border:1.5px solid var(--box-blue-border);
+    border-radius:4px;
+    padding:12px 16px;
+    width:65%;
+    font-size:12.5px;
+    color:#111;
+  }
+  .notes-box .notes-title{
+    font-weight:800;
+    color:#111;
+    margin-bottom:4px;
+  }
+  .notes-box ul{
+    margin:0;
+    padding-left:18px;
+  }
+  .notes-box li{
+    margin-bottom:3px;
+  }
+  /* FOOTER */
+  .footer{
+    background:var(--navy);
+    color:#fff;
+    text-align:center;
+    padding:16px 10px;
+    font-size:14px;
+    font-weight:700;
+  }
+  /* Editable styling */
+  [contenteditable="true"]{
+    outline: none;
+    border-radius:3px;
+  }
+  [contenteditable="true"]:hover{
+    background:rgba(255, 230, 0, 0.15);
+  }
+  [contenteditable="true"]:focus{
+    background:rgba(255, 230, 0, 0.35);
+  }
+  .add-row-btn{
+    margin:10px 0;
+    padding:8px 14px;
+    background:var(--navy);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:13px;
+  }
+  .download-btn{
+    margin:16px auto 0 auto;
+    display:block;
+    padding:12px 22px;
+    background:var(--red);
+    color:#fff;
+    border:none;
+    border-radius:4px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:700;
+    max-width:900px;
+  }
+  .download-btn:hover{
+    opacity:0.9;
+  }
+  .capturing .del-row-btn,
+  .capturing .add-row-btn{
+    display:none !important;
+  }
+  .del-row-btn{
+    background:var(--red);
+    color:#fff;
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+    font-size:11px;
+    padding:3px 6px;
+  }
+  @media print{
+    body{background:#fff; padding:0;}
+    .hint, .add-row-btn, .del-row-btn, .download-btn{display:none !important;}
+    .sheet{box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="hint">
+    ✏️ Todo el texto en azul/negro es editable: haz clic sobre cualquier dato (número de cotización, nombres, precios, notas, etc.) y escribe directamente. Usa el botón "+ Agregar producto" para añadir filas a la tabla. Cuando termines, imprime la página (Ctrl+P) o guarda el HTML para conservar tus cambios.
+  </div>
+
+  <div class="sheet" id="sheet">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo">
+        <span class="emoji">🥩</span>
+        <span contenteditable="true">PORKYBURRITOS</span>
+        <span class="emoji">🐷</span>
+      </div>
+      <div class="cot-title" contenteditable="true">COTIZACIÓN</div>
+    </div>
+    <div class="redline"></div>
+
+    <div class="content">
+      <div class="cot-number">No. <span contenteditable="true">COT-2024-0150</span></div>
+
+      <div class="info-grid">
+        <div class="info-col">
+          <p><span class="label">DE:</span> <span contenteditable="true">PORKYBURRITOS 🐷</span></p>
+          <p><b>Contacto:</b> <span contenteditable="true">+52 871 128 0464</span></p>
+          <p><b>Servicio:</b> <span contenteditable="true">Preparación y entrega de 150 burritos</span></p>
+          <p><b>Modalidad:</b> <span contenteditable="true">Sin servicio de catering</span></p>
+        </div>
+        <div class="info-col">
+          <p><span class="label">PARA:</span> <span contenteditable="true">EVENTO / CLIENTE</span></p>
+          <p><b>Fecha:</b> <span contenteditable="true">24 de agosto de 2026</span></p>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="section-title">DESCRIPCIÓN DEL SERVICIO:</div>
+      <p class="desc-text" contenteditable="true">Preparación y entrega de 150 burritos. Producto listo para consumo, a entregar en el punto acordado. Incluye salsas verde y roja envasadas por separado.</p>
+
+      <div class="section-title">DETALLE DE PRODUCTOS:</div>
+
+      <table id="productsTable">
+        <thead>
+          <tr>
+            <td style="width:12%">CANT.</td>
+            <td style="width:42%">DESCRIPCIÓN</td>
+            <td style="width:23%">P. UNITARIO</td>
+            <td style="width:23%">IMPORTE</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td contenteditable="true">50</td>
+            <td contenteditable="true">Burrito Prensado</td>
+            <td contenteditable="true">$20 MXN</td>
+            <td contenteditable="true">$1,000 MXN</td>
+            <td style="border:none;padding:0;text-align:center;"><button class="del-row-btn" onclick="this.closest('tr').remove(); recalcTotals();">✕</button></td>
+          </tr>
+          <tr>
+            <td contenteditable="true">50</td>
+            <td contenteditable="true">Burrito Frijoles con Queso</td>
+            <td contenteditable="true">$20 MXN</td>
+            <td contenteditable="true">$1,000 MXN</td>
+            <td style="border:none;padding:0;text-align:center;"><button class="del-row-btn" onclick="this.closest('tr').remove(); recalcTotals();">✕</button></td>
+          </tr>
+          <tr>
+            <td contenteditable="true">50</td>
+            <td contenteditable="true">Burrito Papas Rojas con Carne</td>
+            <td contenteditable="true">$20 MXN</td>
+            <td contenteditable="true">$1,000 MXN</td>
+            <td style="border:none;padding:0;text-align:center;"><button class="del-row-btn" onclick="this.closest('tr').remove(); recalcTotals();">✕</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button class="add-row-btn" onclick="addRow()">+ Agregar producto</button>
+
+      <div class="totals-box">
+        <table class="totals-table">
+          <tr>
+            <td class="label-cell">SUBTOTAL:</td>
+            <td class="value-cell" id="subtotalValue" contenteditable="true">$3,000 MXN</td>
+          </tr>
+          <tr class="total-general">
+            <td class="label-cell">TOTAL GENERAL:</td>
+            <td class="value-cell" id="totalGeneralValue" contenteditable="true">$3,000 MXN</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="notes-wrap">
+        <div class="notes-box">
+          <div class="notes-title">NOTAS Y CONDICIONES:</div>
+          <ul contenteditable="true">
+            <li>Ventas únicamente en Torreón, Gómez Palacio y Lerdo.</li>
+            <li>Preparación y entrega. Se incluyen salsas verde y roja por separado en envases cerrados individuales.</li>
+            <li>Pago: 50% de anticipo para confirmar el pedido; 50% contra entrega.</li>
+            <li>Precios en MXN. El total ya incluye impuestos. Cotización válida por 7 días.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" contenteditable="true">
+      Gracias por confiar en PORKYBURRITOS - Para dudas contactar al +52 871 128 0464
+    </div>
+  </div>
+
+  <button class="download-btn" onclick="downloadAsImage()">📥 Descargar cotización como imagen (PNG)</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function downloadAsImage(){
+  const el = document.getElementById('sheet');
+  el.classList.add('capturing');
+  html2canvas(el, {
+    scale: 2,
+    backgroundColor: '#ffffff',
+    useCORS: true
+  }).then(canvas => {
+    el.classList.remove('capturing');
+    const link = document.createElement('a');
+    link.download = 'cotizacion-porkyburritos.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    el.classList.remove('capturing');
+    alert('No se pudo generar la imagen. Revisa tu conexión a internet, ya que se necesita cargar una librería externa (html2canvas) la primera vez.');
+    console.error(err);
+  });
+}
+
+function parseMoney(text){
+  const match = text.replace(/,/g,'').match(/[\d.]+/);
+  return match ? parseFloat(match[0]) : 0;
+}
+
+function formatMoney(num){
+  return '$' + num.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' MXN';
+}
+
+function recalcTotals(){
+  const rows = document.querySelectorAll('#productsTable tbody tr');
+  let sum = 0;
+  rows.forEach(row => {
+    const importeCell = row.children[3];
+    if(importeCell) sum += parseMoney(importeCell.textContent);
+  });
+  const formatted = formatMoney(sum);
+  document.getElementById('subtotalValue').textContent = formatted;
+  document.getElementById('totalGeneralValue').textContent = formatted;
+}
+
+function addRow(){
+  const tbody = document.querySelector('#productsTable tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td contenteditable="true">0</td>
+    <td contenteditable="true">Nuevo producto</td>
+    <td contenteditable="true">$0 MXN</td>
+    <td contenteditable="true">$0 MXN</td>
+    <td style="border:none;padding:0;text-align:center;"><button class="del-row-btn" onclick="this.closest('tr').remove(); recalcTotals();">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  recalcTotals();
+}
+
+document.querySelector('#productsTable tbody').addEventListener('input', function(e){
+  const cell = e.target;
+  if(cell.tagName !== 'TD') return;
+  const row = cell.closest('tr');
+
+  if(cell.cellIndex === 0 || cell.cellIndex === 2){
+    const cant = parseMoney(row.children[0].textContent);
+    const precio = parseMoney(row.children[2].textContent);
+    row.children[3].textContent = formatMoney(cant * precio);
+    recalcTotals();
+  } else if(cell.cellIndex === 3){
+    recalcTotals();
+  }
+});
+
+recalcTotals();
+</script>
+
+</body>
+</html>
