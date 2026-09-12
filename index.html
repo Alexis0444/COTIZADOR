@@ -405,6 +405,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
 function downloadAsImage(){
   const el = document.getElementById('sheet');
   el.classList.add('capturing');
@@ -414,10 +419,23 @@ function downloadAsImage(){
     useCORS: true
   }).then(canvas => {
     el.classList.remove('capturing');
-    const link = document.createElement('a');
-    link.download = 'cotizacion-porkyburritos.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+
+    if(isIOS()){
+      canvas.toBlob(function(blob){
+        const url = URL.createObjectURL(blob);
+        const win = window.open(url, '_blank');
+        if(!win){
+          alert('Tu navegador bloqueó la ventana. Permite ventanas emergentes para este sitio e inténtalo de nuevo.');
+        } else {
+          alert('Se abrió la imagen en una nueva pestaña. Mantén presionada la imagen y elige "Agregar a Fotos" o "Guardar imagen" para descargarla.');
+        }
+      }, 'image/png');
+    } else {
+      const link = document.createElement('a');
+      link.download = 'cotizacion-trasnochados.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
   }).catch(err => {
     el.classList.remove('capturing');
     alert('No se pudo generar la imagen. Revisa tu conexión a internet, ya que se necesita cargar una librería externa (html2canvas) la primera vez.');
