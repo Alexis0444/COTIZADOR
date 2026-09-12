@@ -125,10 +125,16 @@
     line-height:1.4;
   }
   /* TABLE */
+  .table-wrap{
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid var(--gold);
+    margin-top:6px;
+  }
   table{
     width:100%;
     border-collapse:collapse;
-    margin-top:6px;
+    margin-top:0;
   }
   thead td, thead th{
     background:var(--navy);
@@ -325,6 +331,7 @@
 
       <div class="section-title">DETALLE DE PRODUCTOS:</div>
 
+      <div class="table-wrap">
       <table id="productsTable">
         <thead>
           <tr>
@@ -358,6 +365,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <button class="add-row-btn" onclick="addRow()">+ Agregar producto</button>
 
